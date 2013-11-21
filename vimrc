@@ -9,9 +9,13 @@ set nocompatible
 filetype on
 filetype off
 
+
+let s:dotvim = fnamemodify(globpath(&rtp, 'vimrc'), ':p:h')
+
 " Load external configuration before anything else {{{
-if filereadable(expand("~/.vim/before.vimrc"))
-  source ~/.vim/before.vimrc
+let s:beforerc = expand(s:dotvim . '/before.vimrc')
+if filereadable(s:beforerc)
+    exec ':so ' . s:beforerc
 endif
 " }}}
 
@@ -19,7 +23,7 @@ let mapleader = ","
 let maplocalleader = "\\"
 
 " Local vimrc configuration {{{
-let s:localrc = expand($HOME . '/.vim/local.vimrc')
+let s:localrc = expand(s:dotvim . '/local.vimrc')
 if filereadable(s:localrc)
     exec ':so ' . s:localrc
 endif
@@ -34,7 +38,7 @@ endif
 " }}}
 
 " VUNDLE {{{
-let s:bundle_path=$HOME."/.vim/bundle/"
+let s:bundle_path=s:dotvim."/bundle/"
 execute "set rtp+=".s:bundle_path."vundle/"
 call vundle#rc()
 
@@ -44,7 +48,7 @@ Bundle 'gmarik/vundle'
 " PACKAGES {{{
 
 " Install user-supplied Bundles {{{
-let s:extrarc = expand($HOME . '/.vim/extra.vimrc')
+let s:extrarc = expand(s:dotvim . '/extra.vimrc')
 if filereadable(s:extrarc)
     exec ':so ' . s:extrarc
 endif
@@ -82,7 +86,7 @@ if count(g:vimified_packages, 'general')
     Bundle 'vim-scripts/YankRing.vim'
     let g:yankring_replace_n_pkey = '<leader>['
     let g:yankring_replace_n_nkey = '<leader>]'
-    let g:yankring_history_dir = '~/.vim/tmp/'
+    let g:yankring_history_dir = s:dotvim.'/tmp/'
     nmap <leader>y :YRShow<cr>
 
     Bundle 'michaeljsmith/vim-indent-object'
@@ -381,13 +385,16 @@ set ttimeoutlen=10
 
 " _ backups {{{
 if has('persistent_undo')
-  set undodir=~/.vim/tmp/undo//     " undo files
+  " undo files
+  exec 'set undodir='.s:dotvim.'/tmp/undo//'
   set undofile
   set undolevels=3000
   set undoreload=10000
 endif
-set backupdir=~/.vim/tmp/backup// " backups
-set directory=~/.vim/tmp/swap//   " swap files
+" backups
+exec 'set backupdir='.s:dotvim.'/tmp/backup//'
+" swap files
+exec 'set directory='.s:dotvim.'/tmp/swap//'
 set backup
 set noswapfile
 " _ }}}
@@ -571,7 +578,7 @@ nnoremap <leader>z zMzvzz
 " Quick editing {{{
 
 nnoremap <leader>ev <C-w>s<C-w>j:e $MYVIMRC<cr>
-nnoremap <leader>es <C-w>s<C-w>j:e ~/.vim/snippets/<cr>
+exec 'nnoremap <leader>es <C-w>s<C-w>j:e '.s:dotvim.'/snippets/<cr>'
 nnoremap <leader>eg <C-w>s<C-w>j:e ~/.gitconfig<cr>
 nnoremap <leader>ez <C-w>s<C-w>j:e ~/.zshrc<cr>
 nnoremap <leader>et <C-w>s<C-w>j:e ~/.tmux.conf<cr>
@@ -604,19 +611,19 @@ augroup END
 " EXTENSIONS {{{
 
 " _. Scratch {{{
-source ~/.vim/functions/scratch_toggle.vim
+exec ':so '.s:dotvim.'/functions/scratch_toggle.vim'
 " }}}
 
 " _. Buffer Handling {{{
-source ~/.vim/functions/buffer_handling.vim
+exec ':so '.s:dotvim.'/functions/buffer_handling.vim'
 " }}}
 
 " _. Tab {{{
-source ~/.vim/functions/insert_tab_wrapper.vim
+exec ':so '.s:dotvim.'/functions/insert_tab_wrapper.vim'
 " }}}
 
 " _. Text Folding {{{
-source ~/.vim/functions/my_fold_text.vim
+exec ':so '.s:dotvim.'/functions/my_fold_text.vim'
 " }}}
 
 " _. Gist {{{
@@ -638,7 +645,8 @@ vnoremap ar a[
 " }}}
 
 " Load addidional configuration (ie to overwrite shorcuts) {{{
-if filereadable(expand("~/.vim/after.vimrc"))
-  source ~/.vim/after.vimrc
+let s:afterrc = expand(s:dotvim . '/after.vimrc')
+if filereadable(s:afterrc)
+    exec ':so ' . s:afterrc
 endif
 " }}}
