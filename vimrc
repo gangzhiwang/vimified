@@ -447,7 +447,7 @@ set dictionary=/usr/share/dict/words
 au FocusLost    * :silent! wall
 "
 " When vimrc is edited, reload it
-autocmd! BufWritePost vimrc source ~/.vimrc
+autocmd! BufWritePost vimrc source $MYVIMRC
 
 " }}}
 
